@@ -41,24 +41,13 @@ const db = mysql.createPool({
     database: 'ayme_database',
 });
 
-app.get("/users/get", (req, res) => {
-    const sqlSelect = 
-        "SELECT * FROM Users";
-    db.query(sqlSelect, (err, result) => {
-        res.send(result);
-    })
-})
-
 app.post("/register", (req, res) => {
     const userName = req.body.userName;
     const password = req.body.password;
 
     bcrypt.hash(password, saltRounds, (err, hash) => {
-
         if (err) {
-            console.log(err)
-        }
-
+            console.log(err)}
         const sqlInsert = "INSERT INTO Users (name, password) VALUES (?,?);";
         db.query(sqlInsert, [userName, hash], (error, result) => {
             if (error) {
@@ -67,14 +56,6 @@ app.post("/register", (req, res) => {
     })
 })
 
-app.get("/login", (req, res) => {
-    console.log('holalasda')
-    if (req.session.user) {
-        res.send({ loggedIn: true, user: req.session.user })
-    } else {
-        res.send({ loggedIn: false })
-    }
-})
 
 app.post("/login", (req, res) => {
     const userName = req.body.userName;
@@ -89,8 +70,7 @@ app.post("/login", (req, res) => {
             bcrypt.compare(password, result[0].password, (error, response)=> {
                 if (response) {
                     req.session.user = result;
-                    console.log(req.session.user);
-                    res.send(response)
+                    res.send({ message: "Logged", user:userName })
                 } else {
                     res.send({ message: "Wrong password" })
                 }
@@ -100,6 +80,38 @@ app.post("/login", (req, res) => {
         }
     })
 })
+
+app.post("/product", (req, res) => {
+    const productName = req.body.name;
+    const productValue = req.body.value;
+    const sqlInsert = "INSERT INTO Products (name, value) VALUES (?,?);";
+        db.query(sqlInsert, [productName, productValue], (error, result) => {
+            if (error) {
+                console.log(error)}
+        })
+})
+
+app.get("/products/get", (req, res) => {
+    const sqlSelect = "SELECT * FROM Products;"
+    db.query(sqlSelect, (err, result) => {
+        res.send(result)
+    })
+})
+
+app.get('/logout', (req,res) => {
+    req.session.destroy(function (err) {
+        res.send({ logout: true })
+    });
+})
+
+app.get("/login", (req, res) => {
+    if (req.session.user) {
+        res.send({ loggedIn: true, user: req.session.user[0] })
+    } else {
+        res.send({ loggedIn: false })
+    }
+})
+
 
 app.listen(3001, () => {
     console.log("running in port 3001");

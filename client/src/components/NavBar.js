@@ -1,33 +1,60 @@
-import React from 'react';
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import Axios from 'axios';
+import { Link, useLocation } from "react-router-dom";
 
-class NavBar extends React.Component {
-    render () {
+export default function NavBar() {
+    const [userName, setUserName] = useState('')
+    const [role, setRole] = useState('')
+    
+    Axios.defaults.withCredentials = true;
+    const location = useLocation();
+
+    useEffect(() => {
+        Axios.get("http://localhost:3001/login").then((response) => {
+            if (response.data.loggedIn) {
+              setRole(response.data.user.role)
+              setUserName(response.data.user.name)
+            }
+        })
+    }, [])
+
+    const logout = () => {
+        Axios.get("http://localhost:3001/logout").then((response) => {
+            console.log(response)
+        });
+        window.location.reload();
+    }
+
     return (
         <div className="navbar">
-        <Link to="/">
-            <button variant="outlined">
+        {role !== '' && location.pathname === '/' && <p>Bienvenidx {userName}</p>}
+        {location.pathname !== '/' && 
+        <Link to='/'>
+            <button>
                 Home
             </button>
-        </Link>
+        </Link>}
+        {role === '' && location.pathname !== '/register' && 
         <Link to="/register">
-                <button variant="outlined">
-                    Registrate
-                </button>
-            </Link>
+            <button>
+                Registrate
+            </button>
+        </Link>}
+        {role === '' && location.pathname !== '/signup' && 
         <Link to="/signup">
-            <button variant="outlined">
+            <button>
                 Inicia Sesión
             </button>
-        </Link>
+        </Link>}
+        {role === 'admin' && location.pathname !== '/newproduct' && 
         <Link to="/newproduct">
-            <button variant="outlined">
+            <button>
                 Crear Producto
             </button>
-        </Link>
+        </Link>}
+        {role !== '' && 
+        <button onClick={logout}>Salir</button>}
+        <h1>Aymé</h1>
         </div>
     )
-    }
 }
-
-export default NavBar;

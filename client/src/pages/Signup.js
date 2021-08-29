@@ -2,40 +2,51 @@ import React, { useEffect, useState } from 'react';
 import '../App.css';
 import Axios from 'axios';
 import NavBar from '../components/NavBar';
+import { useHistory } from "react-router-dom";
 
 function Signup() {
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
+    const [message, setMessage] = useState("");
+    let history = useHistory()
 
     Axios.defaults.withCredentials = true;
 
-    const login = () => {
+    const login = (e) => {
+      e.preventDefault();
         Axios.post("http://localhost:3001/login", {
             userName: userName,
             password: password
         }).then((response) => {
-            console.log(response.data);
-        })
-    }
+          if (response.data.message === "Logged") {
+            history.push("/");
+          } else if (response.data.message === "Wrong password") {
+            setMessage("Contraseña equivocada")
+          } else if (response.data.message === "User doesn't exist") {
+            setMessage("Usuario no existe")
+          }
+      }
+    )}
 
     useEffect(() => {
         Axios.get("http://localhost:3001/login").then((response) => {
-            console.log(response)
-        });
-    }, []);
+            if (response.data.loggedIn) {
+              history.push('/')
+            };
+    })});
 
     return (
       <div className="registerPage">
         <NavBar />
-        <h1>Aymé</h1>
-        <div className="form">
+        <form action="" onSubmit={login}>
           <h2>Inicia sesión</h2>
           <label>Nombre de usuario</label>
           <input type="text" name="userName" onChange={(e)=>setUserName(e.target.value)} />
           <label>Contraseña:</label>
           <input type="password" name="password" onChange={(e)=>setPassword(e.target.value)}/>
-          <button onClick={login}>Ingresa</button>
-          </div>
+          <button type='submit' onClick={login}>Ingresar</button>
+          </form>
+          {message}
       </div>
     );
   }
