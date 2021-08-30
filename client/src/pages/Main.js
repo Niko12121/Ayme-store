@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
-import NavBar from '../components/NavBar';
 
 export default function Main() {
     const [products, setProducts] = useState([])
-
     useEffect(() => {
         Axios.get("http://localhost:3001/products/get").then((p) => {
-            setProducts(p.data)
-            console.log(p.data)
+            setProducts(p.data.reverse())
         })
       }, []);
-
     return (
         <div>
-            <NavBar />
             <h2>Productos</h2>
+            <div className="store">
             {products.map((p) => {
-                return <div className="product"><b>{p.name}</b><br />${p.value}</div> })}
+                let ref = `/products/${p.idProduct}`
+                return <a href={ref}>
+                    <div className="product">
+                        <b>{p.name}</b><br/><i>${p.value}</i>
+                    </div></a> })}
+            </div>
         </div>
     )
 }

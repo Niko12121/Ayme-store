@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
-import { Link, useLocation } from "react-router-dom";
+import { Link/*, useLocation*/ } from "react-router-dom";
 
 export default function NavBar() {
     const [userName, setUserName] = useState('')
     const [role, setRole] = useState('')
     
     Axios.defaults.withCredentials = true;
-    const location = useLocation();
+    /*const location = useLocation();*/
 
     useEffect(() => {
         Axios.get("http://localhost:3001/login").then((response) => {
@@ -24,29 +24,24 @@ export default function NavBar() {
         });
         window.location.reload();
     }
-
+    
     return (
         <div className="navbar">
-        {role !== '' && location.pathname === '/' && <p>Bienvenidx {userName}</p>}
-        {location.pathname !== '/' && 
-        <Link to='/'>
-            <button>
-                Home
-            </button>
-        </Link>}
-        {role === '' && location.pathname !== '/register' && 
+        {role !== '' && <p>Bienvenidx {userName}</p>}
+        <Link to='/'><button>Home</button></Link>
+        {role === '' && 
         <Link to="/register">
             <button>
                 Registrate
             </button>
         </Link>}
-        {role === '' && location.pathname !== '/signup' && 
+        {role === '' && 
         <Link to="/signup">
             <button>
                 Inicia Sesión
             </button>
         </Link>}
-        {role === 'admin' && location.pathname !== '/newproduct' && 
+        {role === 'admin' && 
         <Link to="/newproduct">
             <button>
                 Crear Producto

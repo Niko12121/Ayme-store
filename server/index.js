@@ -84,8 +84,9 @@ app.post("/login", (req, res) => {
 app.post("/product", (req, res) => {
     const productName = req.body.name;
     const productValue = req.body.value;
-    const sqlInsert = "INSERT INTO Products (name, value) VALUES (?,?);";
-        db.query(sqlInsert, [productName, productValue], (error, result) => {
+    const productDescription = req.body.description;
+    const sqlInsert = "INSERT INTO Products (name, value, description) VALUES (?,?,?);";
+        db.query(sqlInsert, [productName, productValue, productDescription], (error, result) => {
             if (error) {
                 console.log(error)}
         })
@@ -94,6 +95,14 @@ app.post("/product", (req, res) => {
 app.get("/products/get", (req, res) => {
     const sqlSelect = "SELECT * FROM Products;"
     db.query(sqlSelect, (err, result) => {
+        res.send(result)
+    })
+})
+
+app.get("/products/product/get", (req, res) => {
+    const id = req.query.id
+    const sqlSelect = "SELECT * FROM Products WHERE IdProduct = ?;";
+    db.query(sqlSelect, id, (err, result) => {
         res.send(result)
     })
 })

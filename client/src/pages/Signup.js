@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../App.css';
 import Axios from 'axios';
-import NavBar from '../components/NavBar';
 import { useHistory } from "react-router-dom";
 
 function Signup() {
@@ -19,7 +18,7 @@ function Signup() {
             password: password
         }).then((response) => {
           if (response.data.message === "Logged") {
-            history.push("/");
+            window.location.reload();
           } else if (response.data.message === "Wrong password") {
             setMessage("Contraseña equivocada")
           } else if (response.data.message === "User doesn't exist") {
@@ -37,7 +36,6 @@ function Signup() {
 
     return (
       <div className="registerPage">
-        <NavBar />
         <form action="" onSubmit={login}>
           <h2>Inicia sesión</h2>
           <label>Nombre de usuario</label>
