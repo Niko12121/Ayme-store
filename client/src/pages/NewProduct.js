@@ -5,19 +5,33 @@ import { useHistory } from "react-router-dom";
 function NewProduct() {
     const [productName, setProductName] = useState('');
     const [productValue, setProductValue] = useState('');
-    const [productDesc, setProductDesc] = useState('')
+    const [productDesc, setProductDesc] = useState('');
+    const [photo, setProductPhoto] = useState()
     let history = useHistory();
 
     Axios.defaults.withCredentials = true;
 
     const createProduct = (e) => {
+        let seconds = Math.trunc(Date.now() / 1000);
+        console.log(seconds)
         e.preventDefault();
+        const formData = new FormData();
+        formData.append("image", photo);
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        };
+        Axios.post("http://localhost:3001/upload", formData, config)
+        .then((response) => alert("A ver?"))
+        .catch((err) => alert("error :C"))
+
         Axios.post("http://localhost:3001/product", {
             name: productName,
             value: productValue,
-            description: productDesc
+            description: productDesc,
+            file: seconds
         })
-        window.location.reload();
     }
 
     useEffect(()=>{
@@ -36,12 +50,12 @@ function NewProduct() {
           <label>Nombre producto</label>
           <input type="text" name="productName" onChange={(e)=>setProductName(e.target.value)} />
           <label>Foto</label>
-          <input type="file" name="productphoto" />
+          <input type="file" name="image" onChange={(e) =>setProductPhoto(e.target.files[0])} />
           <label>Descripción</label>
           <input type="text" name="productDescription" onChange={(e)=>setProductDesc(e.target.value)} />
           <label>Valor</label>
           <input type="number" name="productValue" onChange={(e)=>setProductValue(e.target.value)}/>
-          <button type='submit' onClick={createProduct}>Ingresar</button>
+          <button type='submit'>Ingresar</button>
           </form>
       </div>
       );

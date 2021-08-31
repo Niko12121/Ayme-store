@@ -6,6 +6,7 @@ export default function Product() {
     const [name, setName] = useState('');
     const [value, setValue] = useState('');
     const [description, setDescription] = useState('');
+    const [file, setFile] = useState('');
 
     Axios.defaults.withCredentials = true;
     let id = useParams().productId
@@ -15,9 +16,12 @@ export default function Product() {
                 const product = res.data[0];
                 setName(product.name);
                 setValue(product.value);
-                setDescription(product.description)});
+                setDescription(product.description);
+                setFile(product.file.toString())})
       });
+    console.log(file)
+
     return (
-        <div>Nombre: {name}<br/>Valor: {value}<br/>Descripción: {description}</div>
+        <div>Nombre: {name}<br/>Valor: {value}<br/><img src={require("../Images/1630371509.jpg")} alt="No cargó" width="100px" height="200px"/><br/>Descripción: {description}</div>
     )
 }

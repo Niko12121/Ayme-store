@@ -1,5 +1,8 @@
 const express = require('express');
 
+const path = require('path');
+const multer = require('multer');
+
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
@@ -13,6 +16,23 @@ const saltRounds = 10;
 const app = express();
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, '../client/src/Images')
+    },
+    filename: (req, file, cb) => {
+        console.log(file)
+        cb(null, Math.trunc(Date.now()/1000).toString() + path.extname(file.originalname))
+    }
+})
+
+const upload = multer({
+    storage: storage,
+    limits:{fieldSize: 1000000},
+ })
+
+ router = express.Router();
 
 app.use(cors({
     origin: ["http://localhost:3000"],
@@ -85,11 +105,15 @@ app.post("/product", (req, res) => {
     const productName = req.body.name;
     const productValue = req.body.value;
     const productDescription = req.body.description;
-    const sqlInsert = "INSERT INTO Products (name, value, description) VALUES (?,?,?);";
-        db.query(sqlInsert, [productName, productValue, productDescription], (error, result) => {
+    const productFile = req.body.file;
+    const sqlInsert = "INSERT INTO Products (name, value, description, file) VALUES (?,?,?,?);";
+        db.query(sqlInsert, [productName, productValue, productDescription, productFile], (error, result) => {
             if (error) {
                 console.log(error)}
         })
+})
+app.post("/upload", upload.single('image'), (req, res) => {
+    res.send("Image Uploaded")
 })
 
 app.get("/products/get", (req, res) => {
