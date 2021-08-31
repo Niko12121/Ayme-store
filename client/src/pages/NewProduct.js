@@ -23,8 +23,10 @@ function NewProduct() {
             }
         };
         Axios.post("http://localhost:3001/upload", formData, config)
-        .then((response) => alert("A ver?"))
-        .catch((err) => alert("error :C"))
+        .then((response) => {
+            alert("Subida correctamente");
+            window.location.reload()
+        })
 
         Axios.post("http://localhost:3001/product", {
             name: productName,

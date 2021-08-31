@@ -17,11 +17,11 @@ export default function Product() {
                 setName(product.name);
                 setValue(product.value);
                 setDescription(product.description);
-                setFile(product.file.toString())})
+                setFile(require('../Images/' + product.file.toString() + ".jpg").default )})
       });
     console.log(file)
 
     return (
-        <div>Nombre: {name}<br/>Valor: {value}<br/><img src={require("../Images/1630371509.jpg")} alt="No cargó" width="100px" height="200px"/><br/>Descripción: {description}</div>
+        <div>Nombre: {name}<br/>Valor: {value}<br/><img className="imagePage" src={file} alt="No cargó" width="100px" height="200px"/><br/>Descripción: {description}</div>
     )
 }

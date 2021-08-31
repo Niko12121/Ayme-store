@@ -33,16 +33,42 @@ form input {
   border: 3px solid
 }
 
-.product {
+.productMain {
+  display: inline-grid;
+  grid-template-rows: 250px 100px;
+  flex-flow: column;
+  width: 250px;
+  height: 350px;
+  outline: solid 3px;
+  margin: 10px
+}
+
+.productMain > .img {
+  position: relative;
+}
+
+.productMain > .img > img {
+  max-height: 100%;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.productMain > .product {
   display: inline-block;
-  width: 200px;
   height: 100px;
   background-color: aquamarine;
   border-radius: 10px;
-  border: 3px solid;
   text-align: center;
-  margin: 10px;
 }
-.product > * {
-  vertical-align:middle;
+
+
+.imagePage {
+  width: auto
 }
