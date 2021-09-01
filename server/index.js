@@ -36,7 +36,7 @@ const upload = multer({
 
 app.use(cors({
     origin: ["http://localhost:3000"],
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true
 }));
 app.use(cookieParser())
@@ -104,10 +104,11 @@ app.post("/login", (req, res) => {
 app.post("/product", (req, res) => {
     const productName = req.body.name;
     const productValue = req.body.value;
+    const productActualValue = req.body.actual_value
     const productDescription = req.body.description;
     const productFile = req.body.file;
-    const sqlInsert = "INSERT INTO Products (name, value, description, file) VALUES (?,?,?,?);";
-        db.query(sqlInsert, [productName, productValue, productDescription, productFile], (error, result) => {
+    const sqlInsert = "INSERT INTO Products (name, value, actual_value, description, file) VALUES (?,?,?,?,?);";
+        db.query(sqlInsert, [productName, productValue, productActualValue, productDescription, productFile], (error, result) => {
             if (error) {
                 console.log(error)}
         })
@@ -143,6 +144,32 @@ app.get("/login", (req, res) => {
     } else {
         res.send({ loggedIn: false })
     }
+})
+
+app.put("/api/product/update", (req, res) => {
+    const id = req.body.idProduct;
+    const newName = req.body.newName;
+    const newValue = req.body.newValue;
+    const newActualValue = req.body.newActualValue
+    const newDescription = req.body.newDescription;
+    const sqlUpdate = "UPDATE Products SET name = ?, value = ?, actual_value = ?, description = ? WHERE idProduct = ?;";
+    db.query(sqlUpdate, [newName, newValue, newActualValue, newDescription, id], (err, result) => {
+        if (err) {
+            console.log(err)
+        }
+    })
+
+})
+
+app.delete("/api/product/delete/:idProduct", (req, res) => {
+    const id = req.params.idProduct;
+    const sqlDelete = "DELETE FROM Products WHERE idProduct = ?";
+    db.query(sqlDelete, id, (err, result) => {
+        if (err) {
+            console.log(err)
+        }
+    })
+
 })
 
 
