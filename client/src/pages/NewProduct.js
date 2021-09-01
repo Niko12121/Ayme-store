@@ -5,24 +5,19 @@ import { useHistory } from "react-router-dom";
 function NewProduct() {
     const [productName, setProductName] = useState('');
     const [productValue, setProductValue] = useState('');
+    const [productActualValue, setProductActualValue] = useState('');
     const [productDesc, setProductDesc] = useState('');
     const [photo, setProductPhoto] = useState()
     let history = useHistory();
 
-    Axios.defaults.withCredentials = true;
 
     const createProduct = (e) => {
         let seconds = Math.trunc(Date.now() / 1000);
-        console.log(seconds)
         e.preventDefault();
         const formData = new FormData();
         formData.append("image", photo);
-        const config = {
-            headers: {
-                'content-type': 'multipart/form-data'
-            }
-        };
-        Axios.post("http://localhost:3001/upload", formData, config)
+
+        Axios.post("http://localhost:3001/upload", formData, {headers: {'content-type': 'multipart/form-data'}})
         .then((response) => {
             alert("Subida correctamente");
             window.location.reload()
@@ -31,6 +26,7 @@ function NewProduct() {
         Axios.post("http://localhost:3001/product", {
             name: productName,
             value: productValue,
+            actual_value: productActualValue,
             description: productDesc,
             file: seconds
         })
@@ -57,6 +53,8 @@ function NewProduct() {
           <input type="text" name="productDescription" onChange={(e)=>setProductDesc(e.target.value)} />
           <label>Valor</label>
           <input type="number" name="productValue" onChange={(e)=>setProductValue(e.target.value)}/>
+          <label>Valor actual (oferta)</label>
+          <input type="number" name="productActualValue" onChange={(e)=>setProductActualValue(e.target.value)}/>
           <button type='submit'>Ingresar</button>
           </form>
       </div>

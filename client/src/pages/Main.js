@@ -19,7 +19,7 @@ export default function Main() {
                         <img src={ require('../Images/' + p.file + '.jpg').default } alt=""/>
                     </div>
                     <div className="product">
-                        <b>{p.name}</b><br/><i>${p.value}</i>
+                        <b>{p.name}</b><br/><i>${p.value}</i><br/>{p.actual_value !== p.value && <b> OFERTA: ${p.actual_value}</b>}
                     </div></a> })}
             </div>
         </div>
