@@ -47,6 +47,12 @@ export default function NavBar() {
                 Crear Producto
             </button>
         </Link>}
+        {role === 'admin' && 
+        <Link to="/categories">
+            <button>
+                Editar Categorias
+            </button>
+        </Link>}
         {role !== '' && 
         <button onClick={logout}>Salir</button>}
         <h1>Aymé</h1>
