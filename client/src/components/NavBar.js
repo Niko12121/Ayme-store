@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
-import { Link/*, useLocation*/ } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function NavBar() {
     const [userName, setUserName] = useState('')
     const [role, setRole] = useState('')
     
     Axios.defaults.withCredentials = true;
-    /*const location = useLocation();*/
 
     useEffect(() => {
         Axios.get("http://localhost:3001/login").then((response) => {
@@ -29,6 +28,7 @@ export default function NavBar() {
         <div className="navbar">
         {role !== '' && <p>Bienvenidx {userName}</p>}
         <Link to='/'><button>Home</button></Link>
+        <Link to='/products'><button>Productos</button></Link>
         {role === '' && 
         <Link to="/register">
             <button>

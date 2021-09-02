@@ -10,7 +10,6 @@ const session = require('express-session');
 const cors = require('cors');
 const mysql = require('mysql');
 const bcrypt = require('bcrypt');
-const { config } = require('process');
 
 const saltRounds = 10;
 
@@ -48,10 +47,11 @@ app.use(bodyParser.urlencoded({
 app.use(session({
     key: "userId",
     secret: "realsecret",
-    resave: false,
+    resave: true,
     saveUninitialized: false,
+    rolling: true,
     cookie: {
-        expires: 60 * 60 * 24
+        maxAge: 60 * 60 * 1000
     }
 }))
 
@@ -143,7 +143,6 @@ app.get("/product/categories/get", (req, res) => {
     const id = req.query.id;
     const sqlSelect = "SELECT Categories.category, Categories.description FROM Categories, ProductCategories WHERE ProductCategories.idProduct = ? AND Categories.category = ProductCategories.category;";
     db.query(sqlSelect, id, (err, result) => {
-        console.log(result)
         res.send(result)
     })
 })

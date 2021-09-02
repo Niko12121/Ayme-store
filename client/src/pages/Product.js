@@ -3,10 +3,7 @@ import { useParams, useHistory } from "react-router-dom";
 import Axios from 'axios';
 
 export default function Product() {
-    const [name, setName] = useState('');
-    const [value, setValue] = useState('');
-    const [actualValue, setActualValue] = useState('');
-    const [description, setDescription] = useState('');
+    const [product, setProduct] = useState({})
     const [file, setFile] = useState('');
     const [role, setRole] = useState('');
     const [nameChange, setNameChange] = useState('');
@@ -29,12 +26,9 @@ export default function Product() {
         })
         Axios.get("http://localhost:3001/products/product/get", {
             params: {id: id}}).then((res) => {
-                const product = res.data[0];
-                setName(product.name);
-                setValue(product.value);
-                setActualValue(product.actual_value)
-                setDescription(product.description);
-                setFile(require('../Images/' + product.file.toString() + '.jpg').default )})
+                const productTo = res.data[0]
+                setProduct(productTo)
+                setFile(require('../Images/' + productTo.file.toString() + '.jpg').default )})
         Axios.get("http://localhost:3001/categories/get").then((p) => {
             setCategories(p.data)
             })
@@ -46,10 +40,10 @@ export default function Product() {
     
     const editProduct = () => {
         /* If the input was left empty, no change the value */
-        let newName = nameChange === '' ? name : nameChange;
-        let newValue = valueChange === '' ? value : valueChange;
-        let newActualValue = actualValueChange === '' ? actualValue : actualValueChange;
-        let newDescription = descriptionChange === '' ? description : descriptionChange;
+        let newName = nameChange === '' ? product.name : nameChange;
+        let newValue = valueChange === '' ? product.value : valueChange;
+        let newActualValue = actualValueChange === '' ? product.actual_value : actualValueChange;
+        let newDescription = descriptionChange === '' ? product.description : descriptionChange;
 
         Axios.put(`http://localhost:3001/api/product/update`, {
             idProduct: id,
@@ -88,13 +82,13 @@ export default function Product() {
 
     return (
         <div>
-            Nombre: {name}<br/>
-            Valor: ${value}<br/>
-            {actualValue !== value && <b>OFERTA: ${actualValue}</b>}
+            Nombre: {product.name}<br/>
+            Valor: ${product.value}<br/>
+            {product.actual_value !== product.value && <b>OFERTA: ${product.actual_value}</b>}
             <img className="imagePage" src={file} alt="No cargó" /><br/>
-            Descripción: {description}<br/>
-            Categorias: {productCategories.map((category) => {
-                return <p>{category.category}: {category.description}<br/></p>
+            Descripción: {product.description}<br/>
+            {productCategories.length > 0 && <b>Categorias:</b>} {productCategories.map((category) => {
+                return <p className="productCategory">{category.category}: {category.description}<br/></p>
             })}<br/>
             {role === "admin" && 
             <div>

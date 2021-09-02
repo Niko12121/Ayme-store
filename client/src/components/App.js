@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, BrowserRouter } from 'react-router-dom';
 import Main from '../pages/Main';
+import Products from '../pages/Products';
 import Signup from '../pages/Signup';
 import Register from '../pages/Register';
 import NewProduct from '../pages/NewProduct';
@@ -14,6 +15,7 @@ function App() {
       <BrowserRouter>
         <NavBar />
         <Route exact path='/' render={(props) => <Main />}/>
+        <Route exact path='/products' render={(props) => <Products />}/>
         <Route exact path='/newproduct' render={(props) => <NewProduct />}/>
         <Route exact path='/categories' render={(props) => <Categories />}/>
         <Route exact path='/signup' render={(props) => <Signup />}/>
