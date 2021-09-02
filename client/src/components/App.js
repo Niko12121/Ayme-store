@@ -5,7 +5,7 @@ import Products from '../pages/Products';
 import Signup from '../pages/Signup';
 import Register from '../pages/Register';
 import NewProduct from '../pages/NewProduct';
-import Product from '../pages/Product';
+import ProductsPage from '../pages/Product';
 import Categories from '../pages/Categories';
 import NavBar from '../components/NavBar';
 import "../App.css"
@@ -20,7 +20,7 @@ function App() {
         <Route exact path='/categories' render={(props) => <Categories />}/>
         <Route exact path='/signup' render={(props) => <Signup />}/>
         <Route exact path='/register' render={(props) => <Register />}/>
-        <Route exact path='/products/:productId' render={(props) => <Product />}/>
+        <Route exact path='/products/:productId' render={(props) => <ProductsPage />}/>
       </BrowserRouter>
   );
 }

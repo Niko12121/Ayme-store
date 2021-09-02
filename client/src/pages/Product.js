@@ -105,10 +105,13 @@ export default function Product() {
                         return <option>{category.category}</option>
                     } else {return ''}
             })}</select><button onClick={addCategory}>Añadir</button></div>}
-            {role === "admin" && <div>Eliminar Categoria: <select id="removeCategory">
+            {role === "admin" && <div>Eliminar Categoria: 
+            <select id="removeCategory">
                 {productCategories.map((category) => {
-                    return <option>{category.category}</option>
-            })}</select><button onClick={removeCategory}>Eliminar</button></div>}
+                    return <option>{category.category}</option>})}
+            </select>
+            <button onClick={removeCategory}>Eliminar</button>
+            </div>}
         </div>
     )
 }
