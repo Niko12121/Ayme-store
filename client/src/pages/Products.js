@@ -10,7 +10,7 @@ export default function ProductsPage() {
     useEffect(() => {
         Axios.get("http://localhost:3001/products/get").then((p) => {
             setProducts(p.data.reverse())
-            setShow(p.data.reverse().sort((a,b) => {return (a.actual_value - a.value) - (b.actual_value - b.value)}))
+            setShow(p.data.reverse())
         })
         Axios.get("http://localhost:3001/categories/get").then((p) => {
             setCategories(p.data)
@@ -18,18 +18,16 @@ export default function ProductsPage() {
       }, []);
 
     const orderShowing = (e) => {
+        let actual_show = show
         let newOrder = e.target.value;
-        let sortProd = show.sort((a, b)=>{
-            if (newOrder === "Mayor precio") {
-                return b.actual_value - a.actual_value
-            } else if (newOrder === "Menor precio") {
-                return a.actual_value - b.actual_value
-            } else {
-                return (a.actual_value - a.value)>(b.actual_value - b.value)?1:-1
-            }
-        })
-        setShow(sortProd)
-        console.log(sortProd)
+        if (newOrder === "Mayor precio") {
+            actual_show.sort((a, b) => (b.actual_value > a.actual_value) ? 1 : (a.actual_value > b.actual_value) ? -1 : 0)
+        } else if (newOrder === "Menor precio") {
+            actual_show.sort((a, b) => (a.actual_value > b.actual_value) ? 1 : (b.actual_value > a.actual_value) ? -1 : 0)
+        } else if (newOrder === "Mayor Oferta") {
+            actual_show.sort((a, b) => (a.actual_value - a.value > b.actual_value - b.value) ? 1 : (b.actual_value - b.value > a.actual_value - a.value) ? -1 : 0)
+        }
+        setShow(actual_show)
     }
 
     async function getData(id) {
