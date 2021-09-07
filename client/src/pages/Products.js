@@ -10,24 +10,24 @@ export default function ProductsPage() {
     useEffect(() => {
         Axios.get("http://localhost:3001/products/get").then((p) => {
             setProducts(p.data.reverse())
-            setShow(p.data.reverse())
+            setShow(p.data.reverse().sort((a, b) => (a.actual_value - a.value) - (b.actual_value - b.value)))
         })
         Axios.get("http://localhost:3001/categories/get").then((p) => {
             setCategories(p.data)
         })
       }, []);
 
-    const orderShowing = (e) => {
-        let actual_show = show
-        let newOrder = e.target.value;
+    const orderShowing = (actual) => {
+        let actual_show = [...actual]
+        let newOrder = document.getElementById('productsOrder').value;
         if (newOrder === "Mayor precio") {
-            actual_show.sort((a, b) => (b.actual_value > a.actual_value) ? 1 : (a.actual_value > b.actual_value) ? -1 : 0)
+            actual_show.sort((a, b) => b.actual_value - a.actual_value)
         } else if (newOrder === "Menor precio") {
-            actual_show.sort((a, b) => (a.actual_value > b.actual_value) ? 1 : (b.actual_value > a.actual_value) ? -1 : 0)
+            actual_show.sort((a, b) => a.actual_value - b.actual_value)
         } else if (newOrder === "Mayor Oferta") {
-            actual_show.sort((a, b) => (a.actual_value - a.value > b.actual_value - b.value) ? 1 : (b.actual_value - b.value > a.actual_value - a.value) ? -1 : 0)
+            actual_show.sort((a, b) => (a.actual_value - a.value) - (b.actual_value - b.value))
         }
-        setShow(actual_show)
+        return (actual_show)
     }
 
     async function getData(id) {
@@ -55,7 +55,7 @@ export default function ProductsPage() {
         }
         setFilters(newList)
         if (filters.length === 0) {
-            setShow(products)
+            setShow(orderShowing(products))
             return};
         let newShow = []
         for (let i = 0; i < products.length; i++) {
@@ -63,13 +63,13 @@ export default function ProductsPage() {
             let res = await getData(id)
             res && newShow.push(products[i])
         }
-        setShow(newShow)
+        setShow(orderShowing(newShow))
     }
 
     return (
         <div>
             <h2>Productos</h2>
-            <Filter orderShowing={orderShowing} categories={categories} filter={filter}/>
+            <Filter orderShowing={() => setShow(orderShowing(show))} categories={categories} filter={filter}/>
             <Products products={show} />
         </div>
     )
@@ -81,7 +81,6 @@ function Filter(props) {
                     return <div><p>{category.category}<input id={"check" + category.category} type="checkbox" onClick={() => props.filter(category.category)}/></p></div>
                 })}
                 <select id="productsOrder" onChange={props.orderShowing}>
-                    <option>All</option>
                     <option>Mayor Oferta</option>
                     <option>Mayor precio</option>
                     <option>Menor precio</option>
