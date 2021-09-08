@@ -128,21 +128,21 @@ app.post("/categories", (req, res) => {
     })
 })
 
-app.post("/product/category", (req, res) => {
-    const idProduct = req.body.idProduct;
+app.post("/subcategories", (req, res) => {
+    const subName = req.body.name;
     const category = req.body.category;
-    const sqlInsert = "INSERT INTO ProductCategories (idProduct, category) VALUES (?,?);"
-    db.query(sqlInsert, [idProduct, category], (error, result) => {
+    const sqlInsert = "INSERT INTO Subcategories (name, category) VALUES (?,?);";
+    db.query(sqlInsert, [subName, category], (error, result) => {
         if (error) {
             console.log(error)
         }
     })
 })
 
-app.get("/product/categories/get", (req, res) => {
-    const id = req.query.id;
-    const sqlSelect = "SELECT Categories.category, Categories.description FROM Categories, ProductCategories WHERE ProductCategories.idProduct = ? AND Categories.category = ProductCategories.category;";
-    db.query(sqlSelect, id, (err, result) => {
+app.get("/category/subcategories", (req, res) => {
+    const category = req.query.category;
+    const sqlSelect = "SELECT * FROM Subcategories WHERE category = ?;";
+    db.query(sqlSelect, category, (error, result) => {
         res.send(result)
     })
 })
@@ -206,7 +206,7 @@ app.delete("/api/product/delete/:idProduct", (req, res) => {
             console.log(err)
         }
     })
-    const sqlDeleteCat = "DELETE FROM ProductCategories WHERE idProduct = ?;"
+    const sqlDeleteCat = "DELETE FROM ProductSubcategories WHERE idProduct = ?;"
     db.query(sqlDeleteCat, id, (err, result) => {
         if (err) {
             console.log(err)
@@ -222,7 +222,7 @@ app.delete("/category/delete/:category", (req, res) => {
             console.log(err)
         }
     })
-    const sqlDeleteProd = "DELETE FROM ProductCategories WHERE category = ?;"
+    const sqlDeleteProd = "DELETE FROM ProductSubcategories WHERE category = ?;"
     db.query(sqlDeleteProd, category, (err, result) => {
         if (err) {
             console.log(err)
@@ -233,7 +233,7 @@ app.delete("/category/delete/:category", (req, res) => {
 app.delete("/product/category", (req, res) => {
     const id = req.body.id;
     const category = req.body.category;
-    sqlDelete = "DELETE FROM ProductCategories WHERE idProduct = ? AND category = ?;"
+    sqlDelete = "DELETE FROM ProductSubcategories WHERE idProduct = ? AND category = ?;"
     db.query(sqlDelete, [id, category], (err, result) => {
         if (err) {
             console.log(err)

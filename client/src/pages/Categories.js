@@ -6,14 +6,26 @@ function Categories() {
     const [categories, setCategories] = useState([])
     const [categoryName, setCategoryName] = useState('');
     const [categoryDescription, setCategoryDescription] = useState('')
+    const [subcategories, setSubcategories] = useState({})
     let history = useHistory();
 
     const createCategory = (e) => {
+        e.preventDefault();
         Axios.post("http://localhost:3001/categories", {
             name: categoryName,
             description: categoryDescription
         });
         alert("Categoría creada");
+        window.location.reload()
+    }
+
+    const addSubcategory = (category) => {
+        let name = document.getElementById("sub"+category).value;
+        Axios.post("http://localhost:3001/subcategories", {
+            name: name,
+            category: category
+        })
+        alert("Subcategoría añadida");
         window.location.reload()
     }
 
@@ -32,8 +44,17 @@ function Categories() {
         })
         Axios.get("http://localhost:3001/categories/get").then((p) => {
             setCategories(p.data)
+            let actual = {}
+            for (let i = 0; i < p.data.length; i++) {
+                Axios.get("http://localhost:3001/category/subcategories", {
+                params : {category : p.data[i].category}}).then((p) => {
+                    actual = {...actual, [p.data[i].category]: p.data}
+                    
+                })
+            }
+            console.log(actual)
         })
-    })
+    }, [])
 
 
     return (
@@ -49,10 +70,14 @@ function Categories() {
         {categories.map((category) => {
             return <div className="category">
                 Categoria: {category.category}<br/>
-                Descripción: {category.description}<br/>
-                <button onClick={() => {deleteCategory(category.category)}}>Eliminar</button>
+                Descripción: {category.description}<br/><br />
+                <label>Añadir subcategoría</label><br />
+                <input type="text" id={"sub" + category.category}/>
+                <button onClick={() => addSubcategory(category.category)}>Añadir</button><br />
+                <button onClick={() => deleteCategory(category.category)}>Eliminar</button>
                 </div>
         })}
+        {console.log(subcategories)}
       </div>
       );
 }
