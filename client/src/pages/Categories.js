@@ -35,26 +35,29 @@ function Categories() {
         window.location.reload()
     }
 
+
     useEffect(()=>{
+
         Axios.get("http://localhost:3001/login").then((res)=>{
             if (!res.data.loggedIn || res.data.user.role !== "admin") {
                 console.log(res.data)
                 history.push("/");
             }
         })
-        Axios.get("http://localhost:3001/categories/get").then((p) => {
-            setCategories(p.data)
+            Axios.get("http://localhost:3001/categories/get").then(async (p) => {
             let actual = {}
             for (let i = 0; i < p.data.length; i++) {
-                Axios.get("http://localhost:3001/category/subcategories", {
-                params : {category : p.data[i].category}}).then((p) => {
-                    actual = {...actual, [p.data[i].category]: p.data}
-                    
+                await Axios.get("http://localhost:3001/category/subcategories", {
+                params : {category : p.data[i].category}}).then((pa) => {
+                    if (p.data.length > 0) {
+                        actual[p.data[i].category] = pa.data
+                    }
                 })
-            }
-            console.log(actual)
+            setSubcategories(actual);
+            setCategories(p.data)
+        }
         })
-    }, [])
+    }, [history])
 
 
     return (
@@ -71,6 +74,7 @@ function Categories() {
             return <div className="category">
                 Categoria: {category.category}<br/>
                 Descripción: {category.description}<br/><br />
+                {console.log(subcategories[category.category])}
                 <label>Añadir subcategoría</label><br />
                 <input type="text" id={"sub" + category.category}/>
                 <button onClick={() => addSubcategory(category.category)}>Añadir</button><br />
