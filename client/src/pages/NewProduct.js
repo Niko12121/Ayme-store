@@ -35,7 +35,6 @@ function NewProduct() {
     useEffect(()=>{
         Axios.get("http://localhost:3001/login").then((res)=>{
             if (!res.data.loggedIn || res.data.user.role !== "admin") {
-                console.log(res.data)
                 history.push("/");
             }
         })

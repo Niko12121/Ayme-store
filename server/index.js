@@ -139,13 +139,19 @@ app.post("/subcategories", (req, res) => {
     })
 })
 
-app.get("/category/subcategories", (req, res) => {
-    const category = req.query.category;
-    const sqlSelect = "SELECT * FROM Subcategories WHERE category = ?;";
-    db.query(sqlSelect, category, (error, result) => {
-        res.send(result)
+app.post("/product/subcategory", (req, res) => {
+    const idProduct = req.body.idProduct;
+    const category = req.body.category;
+    const subcategory = req.body.subcategory;
+    const sqlInsert = "INSERT INTO ProductSubcategories (idProduct, category, subcategory) VALUES (?,?,?);"
+    db.query(sqlInsert, [idProduct, category, subcategory], (error, result) => {
+        if (error) {
+            console.log(error)
+        }
     })
 })
+
+/* Get categories and his subcats */
 
 app.get("/categories/get", (req, res) => {
     const sqlSelect = "SELECT * FROM Categories;"
@@ -154,6 +160,16 @@ app.get("/categories/get", (req, res) => {
     })
 })
 
+app.get("/category/subcategories", (req, res) => {
+    const category = req.query.category;
+    const sqlSelect = "SELECT * FROM Subcategories WHERE category = ?;";
+    db.query(sqlSelect, category, (error, result) => {
+        res.send(result)
+    })
+})
+
+/* Get all products */
+
 app.get("/products/get", (req, res) => {
     const sqlSelect = "SELECT * FROM Products;"
     db.query(sqlSelect, (err, result) => {
@@ -161,9 +177,21 @@ app.get("/products/get", (req, res) => {
     })
 })
 
+/* Get info of 1 product */
+
 app.get("/products/product/get", (req, res) => {
     const id = req.query.id
     const sqlSelect = "SELECT * FROM Products WHERE IdProduct = ?;";
+    db.query(sqlSelect, id, (err, result) => {
+        res.send(result)
+    })
+})
+
+/* Get categories and subcats of 1 products */
+
+app.get("/product/categories/get", (req, res) => {
+    const id = req.query.id;
+    const sqlSelect = "SELECT category, subcategory FROM ProductSubcategories WHERE idProduct = ?;";
     db.query(sqlSelect, id, (err, result) => {
         res.send(result)
     })
@@ -175,6 +203,8 @@ app.get('/logout', (req,res) => {
     });
 })
 
+/* Login */
+
 app.get("/login", (req, res) => {
     if (req.session.user) {
         res.send({ loggedIn: true, user: req.session.user[0] })
@@ -182,6 +212,8 @@ app.get("/login", (req, res) => {
         res.send({ loggedIn: false })
     }
 })
+
+/* Update product */
 
 app.put("/api/product/update", (req, res) => {
     const id = req.body.idProduct;
@@ -222,6 +254,12 @@ app.delete("/category/delete/:category", (req, res) => {
             console.log(err)
         }
     })
+    const sqlDeleteSubs = "DELETE FROM Subcategories WHERE category = ?;";
+    db.query(sqlDeleteSubs, category, (err, result) => {
+        if (err) {
+            console.log(err)
+        }
+    })
     const sqlDeleteProd = "DELETE FROM ProductSubcategories WHERE category = ?;"
     db.query(sqlDeleteProd, category, (err, result) => {
         if (err) {
@@ -230,11 +268,29 @@ app.delete("/category/delete/:category", (req, res) => {
     })
 })
 
-app.delete("/product/category", (req, res) => {
+app.delete("/product/subcategory", (req, res) => {
     const id = req.body.id;
     const category = req.body.category;
-    sqlDelete = "DELETE FROM ProductSubcategories WHERE idProduct = ? AND category = ?;"
-    db.query(sqlDelete, [id, category], (err, result) => {
+    const subcategory = req.body.subcategory;
+    sqlDelete = "DELETE FROM ProductSubcategories WHERE idProduct = ? AND category = ? AND subcategory = ?;"
+    db.query(sqlDelete, [id, category, subcategory], (err, result) => {
+        if (err) {
+            console.log(err)
+        }
+    })
+})
+
+app.delete("/subcategory/delete", (req, res) => {
+    const subcategory = req.body.subcategory;
+    const category = req.body.category;
+    sqlDelete = "DELETE FROM Subcategories WHERE name = ? AND category = ?;"
+    db.query(sqlDelete, [subcategory, category], (err, result) => {
+        if (err) {
+            console.log(err)
+        }
+    })
+    sqlDeleteProd = "DELETE FROM ProductSubcategories WHERE category = ? AND subcategory = ?;"
+    db.query(sqlDeleteProd, [category, subcategory], (err, result) => {
         if (err) {
             console.log(err)
         }

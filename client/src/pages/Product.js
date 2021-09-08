@@ -11,7 +11,7 @@ export default function Product() {
     const [actualValueChange, setActualValueChange] = useState('');
     const [descriptionChange, setDescriptionChange] = useState('');
     const [categories, setCategories] = useState([]);
-    const [productCategories, setProductCategories] = useState([])
+    const [productCategories, setProductCategories] = useState({})
 
     
     let history = useHistory();
@@ -29,12 +29,33 @@ export default function Product() {
                 const productTo = res.data[0]
                 setProduct(productTo)
                 setFile(require('../Images/' + productTo.file.toString() + '.jpg').default )})
-        Axios.get("http://localhost:3001/categories/get").then((p) => {
-            setCategories(p.data)
-            })
+                Axios.get("http://localhost:3001/categories/get").then(async (p) => {
+            let actual = {}
+            for (let i = 0; i < p.data.length; i++) {
+                await Axios.get("http://localhost:3001/category/subcategories", {
+                params : {category : p.data[i].category}}).then((pa) => {
+                    if (p.data.length > 0) {
+                        if (actual[p.data[i]] === undefined) {
+                            actual[p.data[i].category] = pa.data
+                        } else {
+                            actual[p.data[i]].push(pa.data)
+                        }
+                    }
+                })
+            }
+            setCategories(actual);
+        });
         Axios.get("http://localhost:3001/product/categories/get", {
             params: {id : id}}).then((res) => {
-                setProductCategories(res.data)
+                let actual = {}
+                for (let i = 0; i < res.data.length; i++) {
+                    if (actual[res.data[i].category] === undefined) {
+                        actual[res.data[i].category] = [res.data[i].subcategory]
+                    } else {
+                        actual[res.data[i].category].push(res.data[i].subcategory)
+                    }
+                }
+                setProductCategories(actual);
             })
       }, [id]);
     
@@ -61,20 +82,20 @@ export default function Product() {
         history.push('/')
     }
 
-    const addCategory = () => {
-        const addCategory = document.getElementById("newCategory").value;
-        Axios.post("http://localhost:3001/product/category", {
+    const addSubcategory = (category) => {
+        const subcat = document.getElementById("add" + category).value;
+        Axios.post("http://localhost:3001/product/subcategory", {
             idProduct: id,
-            category: addCategory
+            category: category,
+            subcategory: subcat
         })
         alert("Categoría añadida")
         window.location.reload()
     }
 
-    const removeCategory = () => {
-        const removeCategory = document.getElementById("removeCategory").value;
-        Axios.delete("http://localhost:3001/product/category", {
-            data: {id: id, category: removeCategory}
+    const removeSubcategory = (category, sub) => {
+        Axios.delete("http://localhost:3001/product/subcategory", {
+            data: {id: id, category: category, subcategory: sub}
         })
         alert("Categoría eliminada")
         window.location.reload()
@@ -87,9 +108,23 @@ export default function Product() {
             {product.actual_value !== product.value && <b>OFERTA: ${product.actual_value}</b>}
             <img className="imagePage" src={file} alt="No cargó" /><br/>
             Descripción: {product.description}<br/>
-            {productCategories.length > 0 && <b>Categorias:</b>} {productCategories.map((category) => {
-                return <p className="productCategory">{category.category}: {category.description}<br/></p>
+
+            <b>Categorias:</b><br />
+            {Object.keys(productCategories).map((category) => {
+                return <div className="productCategory">
+                        {category}<br/>
+                        <ul>
+                        {productCategories[category].map((sub) => {
+                            return <p>
+                                {role === "admin" && 
+                                    <span className="removeSubcat" onClick={() => {removeSubcategory(category, sub)}}>
+                                    &#10006;</span>}{sub}
+                                    </p>
+                        })}
+                        </ul>
+                    </div>
             })}<br/>
+
             {role === "admin" && 
             <div>
                 <input onChange={(e) => setNameChange(e.target.value)} placeholder="Nuevo título"/><br/>
@@ -98,20 +133,32 @@ export default function Product() {
                 <input onChange={(e) => setDescriptionChange(e.target.value)} placeholder="Nueva descripción"/><br/>
                 <button onClick={editProduct}>Editar producto</button>
             </div>}<br/>
+            {role === "admin" && 
+            <div>
+                Añadir Categoria:
+                {Object.keys(categories).map((category) => {
+                    return <div><p>{category}</p>
+                            <select id={"add" + category}>
+                            {categories[category].map((sub) => {
+                                let show = true;
+                                if (productCategories[category] !== undefined) {
+                                    if (productCategories[category].includes(sub.name)) {
+                                        show = false
+                                    }
+                                }
+                                if (show) {
+                                    return <option>{sub.name}</option>
+                                } else {
+                                    return ''
+                                }
+                            })}
+                            </select>
+                            <button onClick={() => addSubcategory(category)}>Añadir</button>
+                            </div>
+                })}
+            </div>
+            }<br />
             {role === "admin" && <button onClick={deleteProduct}>Eliminar producto</button>}<br/>
-            {role === "admin" && <div>Añadir Categoria: <select id="newCategory">
-                {categories.map((category) => {
-                    if (productCategories.filter(e => e.category === category.category).length === 0) {
-                        return <option>{category.category}</option>
-                    } else {return ''}
-            })}</select><button onClick={addCategory}>Añadir</button></div>}
-            {role === "admin" && <div>Eliminar Categoria: 
-            <select id="removeCategory">
-                {productCategories.map((category) => {
-                    return <option>{category.category}</option>})}
-            </select>
-            <button onClick={removeCategory}>Eliminar</button>
-            </div>}
         </div>
     )
 }

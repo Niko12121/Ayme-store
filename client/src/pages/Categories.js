@@ -3,10 +3,9 @@ import Axios from 'axios';
 import { useHistory } from "react-router-dom";
 
 function Categories() {
-    const [categories, setCategories] = useState([])
     const [categoryName, setCategoryName] = useState('');
     const [categoryDescription, setCategoryDescription] = useState('')
-    const [subcategories, setSubcategories] = useState({})
+    const [categories, setCategories] = useState([])
     let history = useHistory();
 
     const createCategory = (e) => {
@@ -29,6 +28,14 @@ function Categories() {
         window.location.reload()
     }
 
+    const removeSubcategory = (category, sub) => {
+        Axios.delete("http://localhost:3001/subcategory/delete", {
+            data: {category: category, subcategory: sub}
+        })
+        alert("Subcategoría eliminada");
+        window.location.reload()
+    }
+
     const deleteCategory = (category) => {
         Axios.delete(`http://localhost:3001/category/delete/${category}`);
         alert("Categoría eliminada")
@@ -37,25 +44,22 @@ function Categories() {
 
 
     useEffect(()=>{
-
         Axios.get("http://localhost:3001/login").then((res)=>{
             if (!res.data.loggedIn || res.data.user.role !== "admin") {
-                console.log(res.data)
                 history.push("/");
             }
         })
-            Axios.get("http://localhost:3001/categories/get").then(async (p) => {
-            let actual = {}
+        Axios.get("http://localhost:3001/categories/get").then(async (p) => {
+            let actual = []
             for (let i = 0; i < p.data.length; i++) {
                 await Axios.get("http://localhost:3001/category/subcategories", {
                 params : {category : p.data[i].category}}).then((pa) => {
                     if (p.data.length > 0) {
-                        actual[p.data[i].category] = pa.data
+                        actual.push([p.data[i], pa.data])
                     }
                 })
-            setSubcategories(actual);
-            setCategories(p.data)
-        }
+            }
+        setCategories(actual);
         })
     }, [history])
 
@@ -72,16 +76,18 @@ function Categories() {
         </form>
         {categories.map((category) => {
             return <div className="category">
-                Categoria: {category.category}<br/>
-                Descripción: {category.description}<br/><br />
-                {console.log(subcategories[category.category])}
+                Categoria: {category[0].category}<br/>
+                Descripción: {category[0].description}<br/>
+                {category[1].map((sub) => {
+                    return <p><span className="removeSubcat" onClick={() => {removeSubcategory(category[0].category, sub.name)}}>&#10006;</span>{sub.name}</p>
+                })}
+                <br /><br />
                 <label>Añadir subcategoría</label><br />
-                <input type="text" id={"sub" + category.category}/>
-                <button onClick={() => addSubcategory(category.category)}>Añadir</button><br />
-                <button onClick={() => deleteCategory(category.category)}>Eliminar</button>
+                <input type="text" id={"sub" + category[0].category}/>
+                <button onClick={() => addSubcategory(category[0].category)}>Añadir</button><br />
+                <button onClick={() => deleteCategory(category[0].category)}>Eliminar</button>
                 </div>
         })}
-        {console.log(subcategories)}
       </div>
       );
 }

@@ -3,17 +3,30 @@ import Axios from 'axios';
 
 export default function ProductsPage() {
     const [products, setProducts] = useState([])
-    const [categories, setCategories] = useState([])
-    const [filters, setFilters] = useState([])
     const [show, setShow] = useState([])
+    const [categories, setCategories] = useState({})
+    const [filters, setFilters] = useState({"category": [], "subcategory": []})
 
     useEffect(() => {
         Axios.get("http://localhost:3001/products/get").then((p) => {
             setProducts(p.data.reverse())
             setShow(p.data.reverse().sort((a, b) => (a.actual_value - a.value) - (b.actual_value - b.value)))
         })
-        Axios.get("http://localhost:3001/categories/get").then((p) => {
-            setCategories(p.data)
+        Axios.get("http://localhost:3001/categories/get").then(async (p) => {
+            let actual = {}
+            for (let i = 0; i < p.data.length; i++) {
+                await Axios.get("http://localhost:3001/category/subcategories", {
+                params : {category : p.data[i].category}}).then((pa) => {
+                    if (p.data.length > 0) {
+                        if (actual[p.data[i]] === undefined) {
+                            actual[p.data[i].category] = pa.data
+                        } else {
+                            actual[p.data[i]].push(pa.data)
+                        }
+                    }
+                })
+            }
+        setCategories(actual);
         })
       }, []);
 
@@ -31,30 +44,51 @@ export default function ProductsPage() {
     }
 
     async function getData(id) {
-        let res = await Axios.get("http://localhost:3001/product/categories/get", {
-            params: {id : id}})
+        let res = await Axios.get("http://localhost:3001/product/categories/get", {params: {id : id}})
+        let productCategories = {"category": [], "subcategory": []}
+        for (let i = 0; i < res.data.length; i++) {
+            productCategories["category"].includes(res.data[i].category) || productCategories["category"].push(res.data[i].category);
+            productCategories["subcategory"].push([res.data[i].subcategory, res.data[i].category])
+        }
         let actual = true;
-        let productCategories = res.data.map((a) => a.category);
-        for (let j = 0; j<filters.length; j++) {
-            if (!productCategories.includes(filters[j])) {
+        for (let i = 0; i < filters["category"].length; i++) {
+            if (!productCategories["category"].includes(filters["category"][i])) {
+                actual = false;
+            }
+        }
+        for (let i = 0; i < filters["subcategory"].length; i++) {
+            if (JSON.stringify(productCategories["subcategory"]).indexOf(JSON.stringify(filters["subcategory"][i])) === -1) {
                 actual = false
             }
         }
         return actual
     }
 
-    async function filter(category) {
-        let newList = filters
-        let click = document.getElementById("check"+category).checked
-        if (click) {
-            newList.push(category)
+    async function filter(belongs, categoryName) {
+        let newList = filters;
+        let type;
+        if (belongs) {
+            type = "subcategory"
         } else {
-            while (newList.includes(category)) {
-                newList.splice(newList.indexOf(category), 1)
+            type = "category"
+        }
+        let click = document.getElementById("check"+type+categoryName).checked;
+        if (click) {
+            belongs ? newList[type].push([categoryName, belongs]) : newList[type].push(categoryName)
+        } else {
+            if (belongs) {
+                while (newList[type].includes([categoryName, belongs])) {
+                    newList[type].splice(newList[type].indexOf([categoryName, belongs]), 1)
+                }
+            } else {
+                while (newList[type].includes(categoryName)) {
+                    newList[type].splice(newList[type].indexOf(categoryName), 1)
+                }
             }
         }
+        console.log(newList)
         setFilters(newList)
-        if (filters.length === 0) {
+        if (filters["category"].length === 0 && filters["subcategory"].length === 0) {
             setShow(orderShowing(products))
             return};
         let newShow = []
@@ -77,8 +111,15 @@ export default function ProductsPage() {
 
 function Filter(props) {
     return (<div>
-                {props.categories.map((category) => {
-                    return <div><p>{category.category}<input id={"check" + category.category} type="checkbox" onClick={() => props.filter(category.category)}/></p></div>
+                {Object.keys(props.categories).map((category) => {
+                    return <div>
+                                <p><input id={"checkcategory" + category} type="checkbox" onClick={() => props.filter(false ,category)}/>{category}</p>
+                                {props.categories[category].map((sub) => {
+                                    return <div className="subcategoriesFilters">
+                                                <p><input id={"checksubcategory" + sub.name} type="checkbox" onClick={() => props.filter(category ,sub.name)}/>{sub.name}</p>
+                                            </div>
+                                })}
+                            </div>
                 })}
                 <select id="productsOrder" onChange={props.orderShowing}>
                     <option>Mayor Oferta</option>
