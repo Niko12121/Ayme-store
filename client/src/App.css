@@ -97,3 +97,60 @@ form input {
   position: relative;
   left: 20px;
 }
+
+.search {
+  display: inline-block;
+  width: 50%;
+}
+
+.searchinput {
+  display: inline-block;
+  width: 100%;
+}
+
+#searchBar {
+  width: calc(100% - 10px);
+}
+
+.iconIcon {
+  display: inline-block;
+  width: 19px;
+  background-color: black;
+  text-align: center;
+  color: white;
+  margin-left: 5px;
+}
+
+#dataResult {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  background-color: wheat;
+  height: 0;
+  width: 100%;
+  text-align: center;
+  overflow: auto;
+  transition: 1s;
+}
+
+.dataProduct {
+  height: 100%;
+  background-color:rgb(255, 189, 163);
+}
+.dataCategory {
+  height: 100%;
+  background-color:rgb(200, 225, 233);
+}
+
+h5 {
+  margin: 0;
+  font-size: 10px;
+}
+
+.listSearchBar {
+  margin: 0
+}
+
+.prodSearchBar {
+  color: #000;
+  font-weight: bold;
+}

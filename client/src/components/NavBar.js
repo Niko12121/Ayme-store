@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
 import { Link } from "react-router-dom";
+import SearchBar from './SearchBar';
 
 export default function NavBar() {
     const [userName, setUserName] = useState('')
@@ -30,32 +31,13 @@ export default function NavBar() {
         <Link to='/'><button>Home</button></Link>
         <Link to='/products'><button>Productos</button></Link>
         {role === '' && 
-        <Link to="/register">
-            <button>
-                Registrate
-            </button>
-        </Link>}
-        {role === '' && 
-        <Link to="/signup">
-            <button>
-                Inicia Sesión
-            </button>
-        </Link>}
-        {role === 'admin' && 
-        <Link to="/newproduct">
-            <button>
-                Crear Producto
-            </button>
-        </Link>}
-        {role === 'admin' && 
-        <Link to="/categories">
-            <button>
-                Editar Categorias
-            </button>
-        </Link>}
-        {role !== '' && 
-        <button onClick={logout}>Salir</button>}
+        <Link to="/register"><button>Registrate</button></Link>}
+        {role === '' && <Link to="/signup"><button>Inicia Sesión</button></Link>}
+        {role === 'admin' && <Link to="/newproduct"><button>Crear Producto</button></Link>}
+        {role === 'admin' && <Link to="/categories"><button>Editar Categorias</button> </Link>}
+        {role !== '' && <button onClick={logout}>Salir</button>}
         <h1>Aymé</h1>
+        <SearchBar />
         </div>
     )
 }

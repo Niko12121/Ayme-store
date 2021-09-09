@@ -12,7 +12,7 @@ const mysql = require('mysql');
 const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
-
+/* Set up */
 const app = express();
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
@@ -61,7 +61,7 @@ const db = mysql.createPool({
     password: 'password',
     database: 'ayme_database',
 });
-
+/* User register and login */
 app.post("/register", (req, res) => {
     const userName = req.body.userName;
     const password = req.body.password;
@@ -101,7 +101,7 @@ app.post("/login", (req, res) => {
         }
     })
 })
-
+/* Post and photo post */
 app.post("/product", (req, res) => {
     const productName = req.body.name;
     const productValue = req.body.value;
@@ -117,6 +117,8 @@ app.post("/product", (req, res) => {
 app.post("/upload", upload.single('image'), (req, res) => {
     res.send("Image Uploaded")
 })
+
+/* Category and subcategory post */
 
 app.post("/categories", (req, res) => {
     const categoryName = req.body.name;
@@ -138,6 +140,8 @@ app.post("/subcategories", (req, res) => {
         }
     })
 })
+
+/* Add subcategory to product */
 
 app.post("/product/subcategory", (req, res) => {
     const idProduct = req.body.idProduct;
@@ -230,6 +234,8 @@ app.put("/api/product/update", (req, res) => {
 
 })
 
+/* Delete product */
+
 app.delete("/api/product/delete/:idProduct", (req, res) => {
     const id = req.params.idProduct;
     const sqlDelete = "DELETE FROM Products WHERE idProduct = ?;";
@@ -245,6 +251,8 @@ app.delete("/api/product/delete/:idProduct", (req, res) => {
         }
     })
 })
+
+/* Delete product (and his subcategories) */
 
 app.delete("/category/delete/:category", (req, res) => {
     const category = req.params.category;
@@ -268,6 +276,8 @@ app.delete("/category/delete/:category", (req, res) => {
     })
 })
 
+/* Remove subcategory of product */
+
 app.delete("/product/subcategory", (req, res) => {
     const id = req.body.id;
     const category = req.body.category;
@@ -279,6 +289,8 @@ app.delete("/product/subcategory", (req, res) => {
         }
     })
 })
+
+/* Delete subcategory */
 
 app.delete("/subcategory/delete", (req, res) => {
     const subcategory = req.body.subcategory;

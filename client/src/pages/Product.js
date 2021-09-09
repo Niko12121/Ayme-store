@@ -29,7 +29,7 @@ export default function Product() {
                 const productTo = res.data[0]
                 setProduct(productTo)
                 setFile(require('../Images/' + productTo.file.toString() + '.jpg').default )})
-                Axios.get("http://localhost:3001/categories/get").then(async (p) => {
+        Axios.get("http://localhost:3001/categories/get").then(async (p) => {
             let actual = {}
             for (let i = 0; i < p.data.length; i++) {
                 await Axios.get("http://localhost:3001/category/subcategories", {
