@@ -8,10 +8,12 @@ export default function ProductsPage() {
     const [filters, setFilters] = useState({"category": [], "subcategory": []})
 
     useEffect(() => {
+        /* Get products, first ordered by sale */
         Axios.get("http://localhost:3001/products/get").then((p) => {
             setProducts(p.data.reverse())
             setShow(p.data.reverse().sort((a, b) => (a.actual_value - a.value) - (b.actual_value - b.value)))
         })
+        /* Get categories of the form actual = {"months": ["january", "september"], "year": [...]} */
         Axios.get("http://localhost:3001/categories/get").then(async (p) => {
             let actual = {}
             for (let i = 0; i < p.data.length; i++) {
@@ -30,6 +32,7 @@ export default function ProductsPage() {
         })
       }, []);
 
+    /* Ordering products by what is selected */
     const orderShowing = (actual) => {
         let actual_show = [...actual]
         let newOrder = document.getElementById('productsOrder').value;
@@ -43,6 +46,7 @@ export default function ProductsPage() {
         return (actual_show)
     }
 
+    /* Get an id and return true if the product with that id has all filter requeriments */
     async function getData(id) {
         let res = await Axios.get("http://localhost:3001/product/categories/get", {params: {id : id}})
         let productCategories = {"category": [], "subcategory": []}
@@ -64,6 +68,9 @@ export default function ProductsPage() {
         return actual
     }
 
+    /* Get an category(or subcategory) name and the category which it belongs 
+    (if dont belong, belong = false) and set filters, then setShow the products that
+    meet that filters by order of orderShowing */
     async function filter(belongs, categoryName) {
         let newList = filters;
         let type;
@@ -77,16 +84,11 @@ export default function ProductsPage() {
             belongs ? newList[type].push([categoryName, belongs]) : newList[type].push(categoryName)
         } else {
             if (belongs) {
-                while (newList[type].includes([categoryName, belongs])) {
-                    newList[type].splice(newList[type].indexOf([categoryName, belongs]), 1)
-                }
+                newList[type] = newList[type].filter((e) => e[0] !== categoryName || e[1] !== belongs)
             } else {
-                while (newList[type].includes(categoryName)) {
-                    newList[type].splice(newList[type].indexOf(categoryName), 1)
-                }
+                newList[type] = newList[type].filter((e) => e !== categoryName)
             }
         }
-        console.log(newList)
         setFilters(newList)
         if (filters["category"].length === 0 && filters["subcategory"].length === 0) {
             setShow(orderShowing(products))
@@ -109,6 +111,8 @@ export default function ProductsPage() {
     )
 }
 
+/* Filter's menu */
+
 function Filter(props) {
     return (<div>
                 {Object.keys(props.categories).map((category) => {
@@ -128,6 +132,8 @@ function Filter(props) {
                 </select>
             </div>)
 }
+
+/* One product */
 
 function Products(props) {
     return (

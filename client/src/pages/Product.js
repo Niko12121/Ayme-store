@@ -125,15 +125,14 @@ export default function Product() {
                     </div>
             })}<br/>
 
-            {role === "admin" && 
+            {role === "admin" && <div>
             <div>
                 <input onChange={(e) => setNameChange(e.target.value)} placeholder="Nuevo título"/><br/>
                 <input type="number" onChange={(e) => setValueChange(e.target.value)} placeholder="Nuevo precio"/><br/>
                 <input type="number" onChange={(e) => setActualValueChange(e.target.value)} placeholder="Nuevo precio oferta"/><br/>
                 <input onChange={(e) => setDescriptionChange(e.target.value)} placeholder="Nueva descripción"/><br/>
-                <button onClick={editProduct}>Editar producto</button>
-            </div>}<br/>
-            {role === "admin" && 
+                <button onClick={editProduct}>Editar producto</button><br/>
+            </div>
             <div>
                 Añadir Categoria:
                 {Object.keys(categories).map((category) => {
@@ -145,20 +144,14 @@ export default function Product() {
                                     if (productCategories[category].includes(sub.name)) {
                                         show = false
                                     }
-                                }
-                                if (show) {
-                                    return <option>{sub.name}</option>
-                                } else {
-                                    return ''
-                                }
+                                } if (show) {return <option>{sub.name}</option>} else {return ''}
                             })}
                             </select>
                             <button onClick={() => addSubcategory(category)}>Añadir</button>
                             </div>
                 })}
-            </div>
-            }<br />
-            {role === "admin" && <button onClick={deleteProduct}>Eliminar producto</button>}<br/>
+            </div> <br />
+                <button onClick={deleteProduct}>Eliminar producto</button></div>}
         </div>
     )
 }
