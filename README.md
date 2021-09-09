@@ -9,7 +9,14 @@ Creating e-commerce page to Aymé (From Valentina and Janneth Farias)
 * Have fun learning something new :D
 
 ### To do
-* Category table in database, CRUD
-* Connect product to multiples categories, adding and removing whenever the admin want
-* Categorie filter product to user view
-* Add search bar of product by name
+- [x] Category table in database, CRUD
+- [x] SubCategory table in database, Create, reade and delete
+- [x] Connect subcategories with categories
+- [x] Connect product to subcategies
+- [x] Category filter, working for categories and subcategories
+- [ ] Add search bar of product by name
+- [ ] Add hashtags to products, create, read, delete
+- [ ] Search bar working by categories, subcategories, name, hashtags
+- [ ] Shopping cart button, save names of product selected
+- [ ] Delete in shopping cart, change ammount of products
+- [ ] Charge miniphoto of product in shopping cart
