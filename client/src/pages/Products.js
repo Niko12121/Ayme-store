@@ -73,21 +73,12 @@ export default function ProductsPage() {
     meet that filters by order of orderShowing */
     async function filter(belongs, categoryName) {
         let newList = filters;
-        let type;
-        if (belongs) {
-            type = "subcategory"
-        } else {
-            type = "category"
-        }
-        let click = document.getElementById("check"+type+categoryName).checked;
-        if (click) {
+        let type = belongs ? "subcategory" : "category";
+        if (document.getElementById("check"+type+categoryName).checked) {
             belongs ? newList[type].push([categoryName, belongs]) : newList[type].push(categoryName)
         } else {
-            if (belongs) {
-                newList[type] = newList[type].filter((e) => e[0] !== categoryName || e[1] !== belongs)
-            } else {
-                newList[type] = newList[type].filter((e) => e !== categoryName)
-            }
+            let filt = belongs ? (e) => e[0] !== categoryName || e[1] !== belongs : (e) => e !== categoryName;
+            newList[type] = newList[type].filter((e) => filt(e))
         }
         setFilters(newList)
         if (filters["category"].length === 0 && filters["subcategory"].length === 0) {
@@ -95,10 +86,9 @@ export default function ProductsPage() {
             return};
         let newShow = []
         for (let i = 0; i < products.length; i++) {
-            let id = products[i].idProduct;
-            let res = await getData(id)
+            let res = await getData(products[i].idProduct)
             res && newShow.push(products[i])
-        }
+        } 
         setShow(orderShowing(newShow))
     }
 

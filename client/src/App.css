@@ -123,6 +123,8 @@ form input {
 
 #dataResult {
   display: grid;
+  position: absolute;
+  z-index: 10;
   grid-template-columns: 50% 50%;
   background-color: wheat;
   height: 0;
