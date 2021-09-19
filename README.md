@@ -15,8 +15,8 @@ Creating e-commerce page to Aymé (From Valentina and Janneth Farias)
 - [x] Connect product to subcategies
 - [x] Category filter, working for categories and subcategories
 - [x] Add search bar of product by name
-- [ ] Create category pages
-- [ ] Go to category page by SearchBar
+- [x] Create category pages
+- [x] Go to category page by SearchBar
 - [ ] Add hashtags to products, create, read, delete
 - [ ] Search bar working by categories, subcategories, name, hashtags
 - [ ] Shopping cart button, save names of product selected
