@@ -79,7 +79,7 @@ export default function SearchBar() {
                 <div className="dataCategory">
                     <h5> Categorias </h5>
                     {Object.keys(dataCat).map((cat) => {
-                        return <div><b>{cat}</b>
+                        return <div><a className="catSearchBar" href={`/category/${cat}`}>{cat}</a>
                         <ul className="listSearchBar">
                         {dataCat[cat].map((sub) => {
                             return <li>{sub}</li>

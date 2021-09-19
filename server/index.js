@@ -191,12 +191,31 @@ app.get("/products/product/get", (req, res) => {
     })
 })
 
+/* Get all products of a category */
+
+app.get("/category/get", (req, res) => {
+    const name = req.query.name;
+    const sqlSelect = "SELECT Products.idProduct, name, value, actual_value, description, file, subcategory FROM Products, ProductSubcategories WHERE Products.idProduct = ProductSubcategories.idProduct AND ProductSubcategories.category = ?;";
+    db.query(sqlSelect, name, (err, result) => {
+        res.send(result)
+    })
+})
+
 /* Get categories and subcats of 1 products */
 
 app.get("/product/categories/get", (req, res) => {
     const id = req.query.id;
     const sqlSelect = "SELECT category, subcategory FROM ProductSubcategories WHERE idProduct = ?;";
     db.query(sqlSelect, id, (err, result) => {
+        res.send(result)
+    })
+})
+
+app.get("/product/subcategories/get", (req, res) => {
+    const id = req.query.id;
+    const name = req.query.name;
+    const sqlSelect = "SELECT subcategory FROM ProductSubcategories WHERE idProduct = ? AND category = ?;";
+    db.query(sqlSelect, [id, name], (err, result) => {
         res.send(result)
     })
 })

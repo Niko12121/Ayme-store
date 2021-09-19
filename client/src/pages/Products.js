@@ -107,7 +107,7 @@ function Filter(props) {
     return (<div>
                 {Object.keys(props.categories).map((category) => {
                     return <div>
-                                <p><input id={"checkcategory" + category} type="checkbox" onClick={() => props.filter(false ,category)}/>{category}</p>
+                                <p><input id={"checkcategory" + category} type="checkbox" onClick={() => props.filter(false ,category)}/><a className="catSearchBar" href={`/category/${category}`}>{category}</a></p>
                                 {props.categories[category].map((sub) => {
                                     return <div className="subcategoriesFilters">
                                                 <p><input id={"checksubcategory" + sub.name} type="checkbox" onClick={() => props.filter(category ,sub.name)}/>{sub.name}</p>
