@@ -12,6 +12,7 @@ export default function Product() {
     const [descriptionChange, setDescriptionChange] = useState('');
     const [categories, setCategories] = useState([]);
     const [productCategories, setProductCategories] = useState({})
+    const [quantity, setQuantity] = useState(1)
 
     
     let history = useHistory();
@@ -101,6 +102,11 @@ export default function Product() {
         window.location.reload()
     }
 
+    const addCart = () => {
+        /* quantity is how many items the user want to add to Cart, and id is the product */
+        console.log(quantity)
+    }
+
     return (
         <div>
             Nombre: {product.name}<br/>
@@ -124,6 +130,11 @@ export default function Product() {
                         </ul>
                     </div>
             })}<br/>
+
+            <div onClick={() => setQuantity(Math.max(quantity - 1, 1))} className="quantityButton">-</div>
+            <div className="quantityValue">{quantity}</div>
+            <div onClick={() => setQuantity(quantity + 1)} className="quantityButton">+</div><br/>
+            <button onClick={() => addCart()}>Añadir</button>
 
             {role === "admin" && <div>
             <div>
