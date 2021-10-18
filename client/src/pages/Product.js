@@ -5,7 +5,7 @@ import Axios from 'axios';
 export default function Product() {
     const [product, setProduct] = useState({})
     const [file, setFile] = useState('');
-    const [role, setRole] = useState('');
+    const [user, setUser] = useState({role: ""});
     const [nameChange, setNameChange] = useState('');
     const [valueChange, setValueChange] = useState('');
     const [actualValueChange, setActualValueChange] = useState('');
@@ -22,7 +22,7 @@ export default function Product() {
     useEffect(() => {
         Axios.get("http://localhost:3001/login").then((response) => {
             if (response.data.loggedIn) {
-              setRole(response.data.user.role)
+                setUser(response.data.user)
             }
         })
         Axios.get("http://localhost:3001/products/product/get", {
@@ -103,8 +103,13 @@ export default function Product() {
     }
 
     const addCart = () => {
+        Axios.post("http://localhost:3001/shoppingCart/new", {
+            idUser: user.idUsers,
+            idProduct: id,
+            quantity: quantity,
+        })
         /* quantity is how many items the user want to add to Cart, and id is the product */
-        console.log(quantity)
+        window.location.reload()
     }
 
     return (
@@ -122,7 +127,7 @@ export default function Product() {
                         <ul>
                         {productCategories[category].map((sub) => {
                             return <p>
-                                {role === "admin" && 
+                                {user.role === "admin" && 
                                     <span className="removeSubcat" onClick={() => {removeSubcategory(category, sub)}}>
                                     &#10006;</span>}{sub}
                                     </p>
@@ -131,12 +136,14 @@ export default function Product() {
                     </div>
             })}<br/>
 
+            {user.role !== "" && <div>
             <div onClick={() => setQuantity(Math.max(quantity - 1, 1))} className="quantityButton">-</div>
             <div className="quantityValue">{quantity}</div>
             <div onClick={() => setQuantity(quantity + 1)} className="quantityButton">+</div><br/>
             <button onClick={() => addCart()}>Añadir</button>
+            </div>}
 
-            {role === "admin" && <div>
+            {user.role === "admin" && <div>
             <div>
                 <input onChange={(e) => setNameChange(e.target.value)} placeholder="Nuevo título"/><br/>
                 <input type="number" onChange={(e) => setValueChange(e.target.value)} placeholder="Nuevo precio"/><br/>

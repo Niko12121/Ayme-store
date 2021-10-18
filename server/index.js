@@ -155,6 +155,31 @@ app.post("/product/subcategory", (req, res) => {
     })
 })
 
+/* Shopping cart */
+
+app.post("/shoppingCart/new", (req, res) => {
+    const idUser = req.body.idUser;
+    const idProduct = req.body.idProduct;
+    const quantity = req.body.quantity;
+    const sqlInsert = "INSERT INTO ShoppingCart (idUser, idProduct, quantity) VALUES (?,?,?);"
+    db.query(sqlInsert, [idUser, idProduct, quantity], (error, result) => {
+        if (error) {
+            if (error.code === "ER_DUP_ENTRY") {
+                const sqlSelect = "SELECT * FROM ShoppingCart WHERE idUser = ? AND idProduct = ?;";
+                db.query(sqlSelect, [idUser, idProduct], (error, result) => {
+                    const newQuantity = result[0].quantity + quantity;
+                    const sqlUpdate = "UPDATE ShoppingCart SET quantity = ? WHERE idUser = ? AND idProduct = ?;";
+                    db.query(sqlUpdate, [newQuantity, idUser, idProduct], (err, result) => {
+                    if (err) {
+                        console.log(err)
+                    }})
+            })} else {
+                console.log("No entro")
+            }
+        }
+    })
+})
+
 /* Get categories and his subcats */
 
 app.get("/categories/get", (req, res) => {
@@ -236,6 +261,16 @@ app.get("/login", (req, res) => {
     }
 })
 
+/* Get Shopping Cart */
+
+app.get("/shoppingCart", (req, res) => {
+    const idUser = req.query.idUser;
+    const sqlSelect = "SELECT quantity, ShoppingCart.idProduct, name, actual_value, file FROM Products INNER JOIN ShoppingCart ON Products.idProduct = ShoppingCart.idProduct WHERE ShoppingCart.idUser = ?;";
+    db.query(sqlSelect, idUser, (err, result) => {
+        res.send(result)
+    })
+})
+
 /* Update product */
 
 app.put("/api/product/update", (req, res) => {
@@ -251,6 +286,33 @@ app.put("/api/product/update", (req, res) => {
         }
     })
 
+})
+
+/* Update Shopping */
+
+app.put("/shoppingUpdate", (req, res) => {
+    const idUser = req.body.idUser;
+    const idProduct = req.body.idProduct;
+    const quantity = req.body.quantity;
+    sqlUpdate = "UPDATE ShoppingCart SET quantity = ? WHERE idUser = ? AND idProduct = ?;";
+    db.query(sqlUpdate, [quantity ,idUser, idProduct], (err, result) => {
+        if (err) {
+            console.log(err)
+        }
+    })
+})
+
+/* Delete product of shopping cart */
+
+app.delete("/shoppingDelete", (req, res) => {
+    const idUser = req.body.idUser;
+    const idProduct = req.body.idProduct;
+    const sqlDelete = "DELETE FROM ShoppingCart WHERE idUser = ? AND idProduct = ?;";
+    db.query(sqlDelete, [idUser, idProduct], (err, result) => {
+        if (err) {
+            console.log(err)
+        }
+    })
 })
 
 /* Delete product */

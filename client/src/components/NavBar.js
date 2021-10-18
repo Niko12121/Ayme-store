@@ -5,16 +5,14 @@ import SearchBar from './SearchBar';
 import ShoppingCart from './ShoppingCart'
 
 export default function NavBar() {
-    const [userName, setUserName] = useState('')
-    const [role, setRole] = useState('')
+    const [user, setUser] = useState({role: ''})
     
     Axios.defaults.withCredentials = true;
 
     useEffect(() => {
         Axios.get("http://localhost:3001/login").then((response) => {
             if (response.data.loggedIn) {
-              setRole(response.data.user.role)
-              setUserName(response.data.user.name)
+                setUser(response.data.user)
             }
         })
     }, [])
@@ -28,17 +26,17 @@ export default function NavBar() {
     
     return (
         <div className="navbar">
-        {role !== '' && <p>Bienvenidx {userName}</p>}
+        {user.role !== '' && <p>Bienvenidx {user.name}</p>}
         <Link to='/'><button>Home</button></Link>
         <Link to='/products'><button>Productos</button></Link>
-        {role === '' && 
+        {user.role === '' && 
         <Link to="/register"><button>Registrate</button></Link>}
-        {role === '' && <Link to="/signup"><button>Inicia Sesión</button></Link>}
-        {role === 'admin' && <Link to="/newproduct"><button>Crear Producto</button></Link>}
-        {role === 'admin' && <Link to="/categories"><button>Editar Categorias</button> </Link>}
-        {role !== '' && <button onClick={logout}>Salir</button>}
-        {role !== '' && <div className='shoppingCartIcon' onClick={showCart}>C</div>}
-        {role !== '' && <ShoppingCart />}
+        {user.role === '' && <Link to="/signup"><button>Inicia Sesión</button></Link>}
+        {user.role === 'admin' && <Link to="/newproduct"><button>Crear Producto</button></Link>}
+        {user.role === 'admin' && <Link to="/categories"><button>Editar Categorias</button> </Link>}
+        {user.role !== '' && <button onClick={logout}>Salir</button>}
+        {user.role !== '' && <div className='shoppingCartIcon' onClick={showCart}>C</div>}
+        {user.role !== '' && <ShoppingCart user={user} />}
         <h1>Aymé</h1>
         <SearchBar />
         </div>
