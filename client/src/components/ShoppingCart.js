@@ -40,7 +40,6 @@ function ProductShopping(props) {
                 quantity: newQuantity
             });
         }
-        /* Change this */
         setQuantity(newQuantity)
     }
 
@@ -53,6 +52,6 @@ function ProductShopping(props) {
         <button onClick={() => updateQuantity(props.product.idProduct, quantity - 1)}> - </button>
         {quantity}
         <button onClick={() => updateQuantity(props.product.idProduct, quantity + 1)}> + </button>
-        <b> ${props.product.quantity * props.product.actual_value}</b>
+        <b> ${quantity * props.product.actual_value} </b>
     </div>
 }
