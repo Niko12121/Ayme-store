@@ -12,7 +12,7 @@ function NewProduct() {
 
 
     const createProduct = (e) => {
-        let seconds = Math.trunc(Date.now() / 1000);
+        let seconds = Math.trunc(Date.now() / 5000);
         e.preventDefault();
         const formData = new FormData();
         formData.append("image", photo);
