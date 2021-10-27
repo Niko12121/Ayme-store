@@ -1,0 +1,55 @@
+.navbar {
+    text-align: center;
+    background-color: #57a540;
+    display: flex;
+    align-items: center;
+    height: 70px;
+}
+
+.titlePage {
+    color: #7e4d1f;
+    width: 20%;
+}
+
+.linksNavbar {
+    height: 100%;
+    width: calc(80% - 100px);
+    text-align: right;
+}
+
+.searchNavbar {
+    width: 40%;
+}
+
+#searchBar {
+    width: 100%;
+}
+
+.link {
+    font-size: small;
+    color: black;
+    display: inline-block;
+    height: 50%;
+    margin-left: 10px;
+    box-shadow: 2px 2px 5px;
+    background-color: #bd844e;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    opacity: 0.8;
+    transition: 0.5s;
+    white-space: nowrap;
+    width: 35px;
+    overflow: hidden;
+    cursor: pointer;
+    text-align: center;
+}
+
+.link:hover {
+    opacity: 1;
+}
+
+.search {
+    display: inline-block;
+    width: 20%;
+    margin-right: 10px;
+}

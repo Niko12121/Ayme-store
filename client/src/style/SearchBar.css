@@ -1,0 +1,38 @@
+#dataResult {
+    display: grid;
+    position: absolute;
+    z-index: 10;
+    grid-template-columns: 50% 50%;
+    height: 0;
+    width: 40%;
+    text-align: center;
+    overflow: hidden;
+    transition: 1s;
+    direction: rtl;
+    right: 0;
+    transform: translateX(-50%);
+  }
+  
+  .dataProduct {
+    height: 100%;
+    background: linear-gradient(0deg, white 0%, rgb(215, 243, 151) 30%); 
+  }
+
+  .dataCategory {
+    height: 100%;
+    background: linear-gradient(0deg, white 0%, wheat 30%); 
+  }
+  
+  h5 {
+    margin: 0;
+    font-size: 10px;
+  }
+  
+  .listSearchBar {
+    margin: 0
+  }
+  
+  .prodSearchBar {
+    color: #000;
+    font-weight: bold;
+  }

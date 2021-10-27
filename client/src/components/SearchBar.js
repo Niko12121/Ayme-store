@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
+import "../style/SearchBar.css";
 
 export default function SearchBar() {
     const [searchTerm, setSearchTerm] = useState('')

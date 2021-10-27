@@ -21,5 +21,6 @@ Creating e-commerce page to Aymé (From Valentina and Janneth Farias)
 - [x] Shopping cart button, save names of product selected
 - [x] Delete in shopping cart, change ammount of products
 - [x] Charge miniphoto of product in shopping cart
+- [] Style
 - [ ] Add hashtags to products, create, read, delete
 - [ ] Search bar working by tag in product

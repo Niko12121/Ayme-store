@@ -9,7 +9,7 @@ import ProductsPage from '../pages/Product';
 import Category from '../pages/Category';
 import Categories from '../pages/Categories';
 import NavBar from '../components/NavBar';
-import "../App.css"
+import "../style/App.css"
 
 function App() {
   return (

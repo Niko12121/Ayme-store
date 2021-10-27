@@ -3,6 +3,7 @@ import Axios from 'axios';
 import { Link } from "react-router-dom";
 import SearchBar from './SearchBar';
 import ShoppingCart from './ShoppingCart'
+import "../style/NavBar.css"
 
 export default function NavBar() {
     const [user, setUser] = useState({role: ''})
@@ -26,19 +27,21 @@ export default function NavBar() {
     
     return (
         <div className="navbar">
-        {user.role !== '' && <p>Bienvenidx {user.name}</p>}
-        <Link to='/'><button>Home</button></Link>
-        <Link to='/products'><button>Productos</button></Link>
-        {user.role === '' && 
-        <Link to="/register"><button>Registrate</button></Link>}
-        {user.role === '' && <Link to="/signup"><button>Inicia Sesión</button></Link>}
-        {user.role === 'admin' && <Link to="/newproduct"><button>Crear Producto</button></Link>}
-        {user.role === 'admin' && <Link to="/categories"><button>Editar Categorias</button> </Link>}
-        {user.role !== '' && <button onClick={logout}>Salir</button>}
-        {user.role !== '' && <div className='shoppingCartIcon' onClick={showCart}>C</div>}
-        {user.role !== '' && <ShoppingCart user={user} />}
-        <h1>Aymé</h1>
-        <SearchBar />
+        <h1 className="titlePage">Aymé</h1>
+        <div className="linksNavbar">
+            <SearchBar />
+            <Link to='/'><div className="link">Home</div></Link>
+            <Link to='/products'><div className="link">Productos</div></Link>
+            {user.role === '' && 
+            <Link to="/register"><div className="link">Registrate</div></Link>}
+            {user.role === '' && <Link to="/signup"><div className="link">Inicia Sesión</div></Link>}
+            {user.role === 'admin' && <Link to="/newproduct"><div className="link">Crear Producto</div></Link>}
+            {user.role === 'admin' && <Link to="/categories"><div className="link">Editar Categorias</div></Link>}
+            {user.role !== '' && <div className="link" onClick={logout}>Salir</div>}
+            {user.role !== '' && <div className='shoppingCartIcon' onClick={showCart}></div>}
+            {user.role !== '' && <ShoppingCart user={user} />}
+        </div>
+        
         </div>
     )
 }

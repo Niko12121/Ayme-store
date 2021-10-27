@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
+import "../style/Products.css";
+import "../style/ProductStore.css";
 
 export default function ProductsPage() {
     const [products, setProducts] = useState([])
@@ -93,8 +95,7 @@ export default function ProductsPage() {
     }
 
     return (
-        <div>
-            <h2>Productos</h2>
+        <div className="productsPage">
             <Filter orderShowing={() => setShow(orderShowing(show))} categories={categories} filter={filter}/>
             <Products products={show} />
         </div>
@@ -104,13 +105,13 @@ export default function ProductsPage() {
 /* Filter's menu */
 
 function Filter(props) {
-    return (<div>
+    return (<div className="filter">
                 {Object.keys(props.categories).map((category) => {
                     return <div>
-                                <p><input id={"checkcategory" + category} type="checkbox" onClick={() => props.filter(false ,category)}/><a className="catSearchBar" href={`/category/${category}`}>{category}</a></p>
+                                <p><input className="checkboxCat" id={"checkcategory" + category} type="checkbox" onClick={() => props.filter(false ,category)}/><a className="catSearchBar" href={`/category/${category}`}>{category}</a></p>
                                 {props.categories[category].map((sub) => {
                                     return <div className="subcategoriesFilters">
-                                                <p><input id={"checksubcategory" + sub.name} type="checkbox" onClick={() => props.filter(category ,sub.name)}/>{sub.name}</p>
+                                                <p><input className="checkboxCat" id={"checksubcategory" + sub.name} type="checkbox" onClick={() => props.filter(category ,sub.name)}/>{sub.name}</p>
                                             </div>
                                 })}
                             </div>

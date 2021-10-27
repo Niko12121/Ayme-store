@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
+import "../style/ShoppingCart.css";
 
 export default function SearchingCart(props) {
     const [cart, setCart] = useState([])

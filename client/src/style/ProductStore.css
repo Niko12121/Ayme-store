@@ -1,0 +1,38 @@
+.productMain {
+    display: flex;
+    flex-flow: column;
+    background-color: white;
+    margin: 25px;
+    margin-left: 20px;
+    margin-right: 20px;
+    transition: 0.5s;
+}
+
+.productMain:hover {
+    transform: scale(1.1);
+}
+  
+.productMain > .img {
+    height: 100%;
+    margin: 10px;
+    position: relative;
+}
+  
+.productMain > .img > img {
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+  
+.productMain > .product {
+    display: inline-block;
+    height: 100px;
+    text-align: center;
+}
