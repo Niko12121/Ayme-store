@@ -25,7 +25,7 @@
     background-color: rgb(223, 223, 223);
 }
 
-#productsOrder {
+.productsOrder {
     background-color: transparent;
     border-color: white;
     border-top: none;

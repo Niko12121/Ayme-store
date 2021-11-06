@@ -68,15 +68,17 @@ export default function Category() {
         return (actual_show)
     }
 
-    return (<div>
-            {Object.values(subCats).map((sub) => {
-                return <p><input id={"check" + sub.name} type="checkbox" onClick={() => filter(sub.name)}/>{sub.name}</p>
-            })}
-            <select id="productsOrder" onChange={() => setShow(orderShowing(show))}>
-                <option>Mayor Oferta</option>
-                <option>Mayor precio</option>
-                <option>Menor precio</option>
-            </select>
+    return (<div className="productsPage">
+            <div class="filter">
+                {Object.values(subCats).map((sub) => {
+                    return <p><input className="checkboxCat" id={"check" + sub.name} type="checkbox" onClick={() => filter(sub.name)}/>{sub.name}</p>
+                })}
+                <select id="productsOrder" onChange={() => setShow(orderShowing(show))}>
+                    <option>Mayor Oferta</option>
+                    <option>Mayor precio</option>
+                    <option>Menor precio</option>
+                </select>
+            </div>
             <Products products={show} />
             </div>)
 }

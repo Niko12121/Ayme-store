@@ -77,14 +77,14 @@ form input {
 
 
 .quantityButton {
-  border: solid 1px black;
-  border-radius: 5px;
+  box-shadow: 0px 0px 5px black;
+  font-weight: 500;
   text-align: center;
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
+  font-size: larger;
   user-select: none;
   display: inline-block;
-  background-color: darkcyan;
   cursor: pointer;
 }
 .quantityValue {

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from "react-router-dom";
 import Axios from 'axios';
+import "../style/Product.css";
+
 
 export default function Product() {
     const [product, setProduct] = useState({})
@@ -112,64 +114,77 @@ export default function Product() {
         window.location.reload()
     }
 
+
     return (
-        <div>
-            Nombre: {product.name}<br/>
-            Valor: ${product.value}<br/>
-            {product.actual_value !== product.value && <b>OFERTA: ${product.actual_value}</b>}
-            <img className="imagePage" src={file} alt="No cargó" /><br/>
-            Descripción: {product.description}<br/>
-
-            <b>Categorias:</b><br />
-            {Object.keys(productCategories).map((category) => {
-                return <div className="productCategory">
-                        {category}<br/>
-                        <ul>
-                        {productCategories[category].map((sub) => {
-                            return <p>
-                                {user.role === "admin" && 
-                                    <span className="removeSubcat" onClick={() => {removeSubcategory(category, sub)}}>
-                                    &#10006;</span>}{sub}
-                                    </p>
-                        })}
-                        </ul>
-                    </div>
-            })}<br/>
-
-            {user.role !== "" && <div>
-            <div onClick={() => setQuantity(Math.max(quantity - 1, 1))} className="quantityButton">-</div>
-            <div className="quantityValue">{quantity}</div>
-            <div onClick={() => setQuantity(quantity + 1)} className="quantityButton">+</div><br/>
-            <button onClick={() => addCart()}>Añadir</button>
-            </div>}
-
-            {user.role === "admin" && <div>
-            <div>
-                <input onChange={(e) => setNameChange(e.target.value)} placeholder="Nuevo título"/><br/>
-                <input type="number" onChange={(e) => setValueChange(e.target.value)} placeholder="Nuevo precio"/><br/>
-                <input type="number" onChange={(e) => setActualValueChange(e.target.value)} placeholder="Nuevo precio oferta"/><br/>
-                <input onChange={(e) => setDescriptionChange(e.target.value)} placeholder="Nueva descripción"/><br/>
-                <button onClick={editProduct}>Editar producto</button><br/>
+        <div id="productPage">
+            <div id="photoProduct">
+            <img id="imagePage" src={file} alt="No cargó" /><br/>
+                
             </div>
             <div>
-                Añadir Categoria:
-                {Object.keys(categories).map((category) => {
-                    return <div><p>{category}</p>
+                <h3 id="titleProduct">{product.name}</h3>
+                <div id="infoProduct">
+                <div id="textProduct">
+                    <p>{product.description}</p><br/>
+                    <div className="productCategories">
+                    {Object.keys(productCategories).map((category) => {
+                        return <div className="productCategory">
+                                {category}<br/>
+                                <ul>
+                                {productCategories[category].map((sub) => {
+                                    return <span>
+                                        {user.role === "admin" && 
+                                            <span className="removeSubcat" onClick={() => {removeSubcategory(category, sub)}}>
+                                            &#10006;</span>}{sub}
+                                            </span>
+                                })}
+                                </ul>
+                            </div>
+                    })}
+                    </div>
+                </div>
+                <div id="buyProduct">
+                    <div id="centerBuy">
+                    {product.actual_value !== product.value && <span class="originalPrice">${quantity * product.value}</span>}{product.actual_value === product.value && <span>${ quantity * product.value}</span>}<br/>
+                    {product.actual_value !== product.value && <span class="salePrice">${quantity * product.actual_value}</span>}<br/><br/>
+                    <div onClick={() => setQuantity(Math.max(quantity - 1, 1))} className="quantityButton">-</div>
+                    <div className="quantityValue">{quantity}</div>
+                    <div onClick={() => setQuantity(quantity + 1)} className="quantityButton">+</div><br/><br/><br/>
+                    {user.role !== "" && <div><button onClick={() => addCart()}>Añadir</button>
+                    </div>}
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div id="adminProduct">
+                {user.role === "admin" && <div>
+                <div>
+                    <input onChange={(e) => setNameChange(e.target.value)} placeholder="Nuevo título"/><br/>
+                    <input type="number" onChange={(e) => setValueChange(e.target.value)} placeholder="Nuevo precio"/><br/>
+                    <input type="number" onChange={(e) => setActualValueChange(e.target.value)} placeholder="Nuevo precio oferta"/><br/>
+                    <input onChange={(e) => setDescriptionChange(e.target.value)} placeholder="Nueva descripción"/><br/>
+                    <button onClick={editProduct}>Editar producto</button><br/>
+                </div>
+                <div>
+                    Añadir Categoria:
+                    {Object.keys(categories).map((category) => {
+                        return <div><p>{category}</p>
                             <select id={"add" + category}>
-                            {categories[category].map((sub) => {
-                                let show = true;
-                                if (productCategories[category] !== undefined) {
-                                    if (productCategories[category].includes(sub.name)) {
-                                        show = false
-                                    }
-                                } if (show) {return <option>{sub.name}</option>} else {return ''}
-                            })}
+                                {categories[category].map((sub) => {
+                                    let show = true;
+                                    if (productCategories[category] !== undefined) {
+                                        if (productCategories[category].includes(sub.name)) {
+                                            show = false
+                                        }
+                                    } if (show) {return <option>{sub.name}</option>} else {return ''}
+                                })}
                             </select>
                             <button onClick={() => addSubcategory(category)}>Añadir</button>
-                            </div>
+                        </div>
                 })}
-            </div> <br />
+                </div>
                 <button onClick={deleteProduct}>Eliminar producto</button></div>}
+            </div>
         </div>
     )
 }
