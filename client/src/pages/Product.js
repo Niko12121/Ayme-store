@@ -110,8 +110,8 @@ export default function Product() {
             idProduct: id,
             quantity: quantity,
         })
-        /* quantity is how many items the user want to add to Cart, and id is the product */
-        window.location.reload()
+        /* quantity is how many items the user want to add to Cart, id is the product */
+        /* window.location.reload() fail */
     }
 
 
